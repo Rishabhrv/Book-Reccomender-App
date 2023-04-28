@@ -1,6 +1,6 @@
 # Book-Reccomender-App
 
-The Book Recommender System is designed to provide personalized book recommendations using **collaborative filtering techniques**. This project aims to help users discover new books based on their preferences and the recommendations of like-minded individuals.
+The Book Recommender System is a collaborative filtering-based approach designed to provide personalized book recommendations. By utilizing collaborative filtering techniques, the system leverages user preferences and similarities to suggest books that align with their interests.The project provides a user-friendly UI experience through Streamlit.
 
 **Installation**
 
