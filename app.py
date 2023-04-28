@@ -4,49 +4,54 @@ import pickle
 import numpy as np
 from PIL import Image
 
-book_list = pickle.load(open('pivot.pkl','rb'))
-book_list = book_list.index
-similarity_score = pickle.load(open('similarity.pkl','rb'))
-whole_book = pickle.load(open('whole_book_data.pkl','rb'))
-top50 = pickle.load(open('top50.pkl','rb'))
-top50_img = top50['Image-URL-M'].reset_index()
+# Load necessary data using pickle 
+book_list = pickle.load(open('pivot.pkl','rb')) # Load pivot.pkl file using pickle to get the list of books
+book_list = book_list.index # Get the index of the book list
+similarity_score = pickle.load(open('similarity.pkl','rb')) # Load similarity.pkl file using pickle to get the similarity scores
+whole_book = pickle.load(open('whole_book_data.pkl','rb')) # Load whole_book_data.pkl file using pickle to get the whole book data
+top50 = pickle.load(open('top50.pkl','rb')) # Load top50.pkl file using pickle to get the top 50 book data
+top50_img = top50['Image-URL-M'].reset_index() # Get the image URL for the top 50 books
 top50_img = top50_img['Image-URL-M']
-top50_tit = top50['Book-Title'].reset_index()
+top50_tit = top50['Book-Title'].reset_index() # Get the book title for the top 50 books
 top50_tit = top50_tit['Book-Title']
-top50_auth = top50['Book-Author'].reset_index()
+top50_auth = top50['Book-Author'].reset_index() # Get the book author for the top 50 books
 top50_auth = top50_auth['Book-Author']
 
+# Open the image for the app
 image = Image.open('myimage.jpg')
 
+# Create a title and sidebar for the app
 st.title('Book Shelf')
-
 st.sidebar.write('Built By -')
 st.sidebar.title('Rishabh Vyas')
 st.sidebar.image(image,caption='Machine Learning Engineer',width=160)
 st.sidebar.write('E-mail - rishabhvyas472@gmail.com')
 
+# Create two tabs for the app - Book Recommender and Top Books
 tab1,tab2= st.tabs(['Book Recommender','Top Books'])
 
- 
+# Define a function to recommend books based on the input book
 def recomend(book_name):
+    # Get the index of the input book in the book list
     index_num = np.where(book_list == book_name)[0][0]
+    # Get the similarity scores for the input book
     similarity = similarity_score[index_num]
+    # Sort the similarity scores and get the top 6 books
     sorted_score = sorted(list(enumerate(similarity)),key = lambda x:x[1],reverse=True)[1:7]
     
-    
+    # Create empty lists for the recommended book's title, author, and image
     title =[]
     author = []
     images =[]
 
+    # For each book in the top 6 recommended books, get the title, author, and image
     for i in sorted_score:
         title.append(book_list[i[0]])
         author.append(list(whole_book[whole_book['Book-Title']==book_list[i[0]]].drop_duplicates('Book-Title')['Book-Author'].values))
         images.append(list(whole_book[whole_book['Book-Title']==book_list[i[0]]].drop_duplicates('Book-Title')['Image-URL-M'].values))
             
-        
+    # Return the recommended books' title, author, and image
     return title,author,images
-
-
 
 with tab1:
     st.header('Book Recommender')
